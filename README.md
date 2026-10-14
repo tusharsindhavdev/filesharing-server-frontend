@@ -1,16 +1,23 @@
-# React + Vite
+# File Sharing Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React frontend for the file-sharing API. It supports server status, uploading files, listing stored files, downloading files, and deleting files.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Run the API server bound to all network interfaces on port `8008`, then start the frontend bound to all interfaces on port `5173`:
 
-## React Compiler
+```sh
+uvicorn main:app --host 0.0.0.0 --port 8008
+npm run dev -- --host 0.0.0.0
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The API origin is set by `VITE_API_URL`. Copy `.env.example` to `.env` and set it to the backend computer's LAN address:
 
-## Expanding the Oxlint configuration
+```sh
+cp .env.example .env
+# VITE_API_URL=http://192.168.1.81:8008
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Restart Vite after changing `.env`; Vite embeds environment values when it starts. Keep `.env` local (it is ignored by Git). The backend CORS configuration must allow both `http://localhost:5173` and the frontend computer's LAN origin, such as `http://192.168.1.81:5173`.
+
+From another computer on the same LAN, open `http://192.168.1.81:5173` and check the browser's Network panel to confirm API requests go to `http://192.168.1.81:8008`. Test the backend separately at `http://192.168.1.81:8008/` or `http://192.168.1.81:8008/docs`. If the Mac's IP changes, update `VITE_API_URL` in `.env` and the backend's allowed frontend origin if that address is used there, then restart both servers.
